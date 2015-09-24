@@ -1,13 +1,36 @@
 'use strict';
+
+/**
+ * @ngdoc function
+ * @name jschallengeApp.controller:MainCtrl
+ * @description
+ * # MainCtrl
+ * Controller of the jschallengeApp
+ */
 angular.module('jschallengeApp')
 
 .controller('MainCtrl', function ($scope, $http) {
+
+    // TODO isolate d3 using dependency injection
+
+    var carsAvailable = 'cars_available',
+        parkingName = 'parking_shortname';
 
     // Rental time in hours
     $scope.rentalTime = 2;
 
     // How many rows of the table - 1 will be rendered
     var numDays = 6;
+
+    // Helper method
+    var makeArray = function (size, obj) {
+        var tmp = [],
+            i;
+        for (i = 0; i < size; i += 1) {
+        	tmp.push(obj);
+        }
+        return tmp;
+    };
 
     // Generate SVG element with the map from the data inside the container passed
     var generateMap = function (data, container) {
@@ -32,7 +55,7 @@ angular.module('jschallengeApp')
             .enter()
             .append('circle')
             .attr('r', function (d) {
-                return d.cars_available * 3;
+                return d[carsAvailable] * 3;
             })
             .attr('cx', function (d) {
                 return projection([parseFloat(d.longitude), 0])[0];
@@ -43,7 +66,7 @@ angular.module('jschallengeApp')
 
         points.append('title')
             .text(function (d) {
-                return d.parking_shortname || '';
+                return d[parkingName] || '';
             });
     };
 
@@ -97,17 +120,14 @@ angular.module('jschallengeApp')
         if (counter === data.length) {
 
             // Group by days
-            var days = Array.apply(null, Array(numDays + 1));
+            var days = makeArray(numDays + 1);
             days.map(function (_, i, list) {
                 list[i] = data.splice(0, i === 0 ? ((data.length % 24) || 24) : 24);
             });
 
             // Fill up the first day with empty elements as it may not contain
             // all 24 hours e.g. when we call this method in the afternoon
-            days[0] = Array.apply(null, Array(24 - days[0].length))
-                .map(function () {
-                    return [];
-                })
+            days[0] = makeArray(24 - days[0].length, [])
                 .concat(days[0]);
 
             // Remove first 7 hours of each day - booking available from 6am
@@ -124,7 +144,7 @@ angular.module('jschallengeApp')
     var count = (23 - new Date().getHours()) + 24 * numDays;
 
     // Fetch the data from the server
-    Array.apply(null, Array(count))
+    makeArray(count)
         .map(function (_, i, list) {
 
             var start = Date.now() + (i + 1) * 3600 * 1000;
@@ -139,6 +159,5 @@ angular.module('jschallengeApp')
                 .error(function (err) {
                     console.error(err);
                 });
-            return i;
         });
 });
