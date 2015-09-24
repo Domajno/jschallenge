@@ -1,3 +1,4 @@
+'use strict';
 angular.module('jschallengeApp')
 
 .controller('MainCtrl', function ($scope, $http) {
@@ -15,8 +16,8 @@ angular.module('jschallengeApp')
 
         var svg = d3.select(container)
             .append('svg')
-            .attr("width", '100%')
-            .attr("height", '100%')
+            .attr('width', '100%')
+            .attr('height', '100%')
             .attr('viewBox', ' 0 0 ' + size + ' ' + size);
 
         // Use mercator projection - center and scale set manually because the data is known
