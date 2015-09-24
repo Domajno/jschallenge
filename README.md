@@ -13,6 +13,9 @@ Or at least on September 23 in the evening was returning an empty result. Becaus
 That's how it should look like
 ![Screenshot](screenhot.png?raw=true "Screenshot Sept 24 2015 1PM")
 
+Each cell is a map. Each circle is one parking. I am sure you can recognize each of the parkings even though there are no roads or land rendered. If you cannot see a certain parking on the map it means that there are 0 cars available.
+![Map](map.png?raw=true "Map of the pick-up points")
+
 
 ## notes
 Raw project was genererated with [yo angular generator](https://github.com/yeoman/generator-angular)
